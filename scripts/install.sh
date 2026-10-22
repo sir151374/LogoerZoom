@@ -16,10 +16,11 @@ done
 if [[ -d "$APP" ]]; then
     BACKUP="$BASE/Backups/$(date +%Y%m%d-%H%M%S)"
     mkdir -p "$BACKUP"
-    ditto "$APP" "$BACKUP/LogoerZoom.app"
+    mv "$APP" "$BACKUP/LogoerZoom.app"
 fi
 mkdir -p "$BASE" "$HOME/Library/LaunchAgents"
 ditto build/LogoerZoom.app "$APP"
+codesign --verify --strict "$APP"
 python3 - "$APP" "$PLIST" "$LABEL" <<'PY'
 import plistlib, sys
 app, target, label = sys.argv[1:]
